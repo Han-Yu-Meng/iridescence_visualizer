@@ -1,0 +1,14 @@
+name: "iridescence_visualizer"
+version: "0.1.0"
+description: "Fins visualization plugin based on Iridescence"
+maintainers:
+  - name: "fins"
+    email: "fins@sjtu.edu.cn"
+depends:
+  PCL: "system"
+  sensor_msgs: "system"
+  nav_msgs: "system"
+  geometry_msgs: "system"
+  iridescence: "system"
+licenses:
+  - "MIT"
