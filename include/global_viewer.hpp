@@ -55,6 +55,7 @@ public:
 
   void update_transform(const std::string& name, const Eigen::Matrix4f& matrix, const std::string& child, const std::string& parent) {
     (void)child;
+    (void)parent;
     std::lock_guard<std::mutex> lock(mtx_);
     transforms_to_update_[name] = matrix;
   }
