@@ -10,6 +10,6 @@ depends:
   nav_msgs: "system"
   geometry_msgs: "system"
   iridescence: "system"
-  glfw: "system"
+  glfw3: "system"
 licenses:
   - "MIT"
