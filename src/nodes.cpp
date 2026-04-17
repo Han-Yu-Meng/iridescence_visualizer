@@ -46,8 +46,7 @@ public:
     register_input<pcl::PointCloud<pcl::PointXYZ>::Ptr>("cloud", &IridescenceCloudXYZVisualizer::on_cloud);
   }
 
-  void on_cloud(const fins::Msg<pcl::PointCloud<pcl::PointXYZ>::Ptr> &msg) {
-    auto cloud = *msg;
+  void on_cloud(const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud) {
     if (!cloud || cloud->empty()) return;
     std::vector<float> buffer;
     buffer.reserve(cloud->size() * 6);
@@ -69,8 +68,7 @@ public:
     register_input<pcl::PointCloud<pcl::PointXYZI>::Ptr>("cloud", &IridescenceCloudXYZIVisualizer::on_cloud);
   }
 
-  void on_cloud(const fins::Msg<pcl::PointCloud<pcl::PointXYZI>::Ptr> &msg) {
-    auto cloud = *msg;
+  void on_cloud(const pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud) {
     if (!cloud || cloud->empty()) return;
     
     float min_i = 1e10, max_i = -1e10;
@@ -102,8 +100,7 @@ public:
     register_input<pcl::PointCloud<pcl::PointXYZRGB>::Ptr>("cloud", &IridescenceCloudRGBVisualizer::on_cloud);
   }
 
-  void on_cloud(const fins::Msg<pcl::PointCloud<pcl::PointXYZRGB>::Ptr> &msg) {
-    auto cloud = *msg;
+  void on_cloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud) {
     if (!cloud || cloud->empty()) return;
     std::vector<float> buffer;
     buffer.reserve(cloud->size() * 6);
@@ -130,14 +127,14 @@ public:
   void reset() override { GlobalViewer::get().unregister_active_node(); }
   void initialize() override {}
   
-  void on_transform(const fins::Msg<geometry_msgs::msg::TransformStamped> &msg) {
+  void on_transform(const geometry_msgs::msg::TransformStamped &msg) {
     Eigen::Matrix4f mat = Eigen::Matrix4f::Identity();
-    mat(0,3) = msg->transform.translation.x;
-    mat(1,3) = msg->transform.translation.y;
-    mat(2,3) = msg->transform.translation.z;
-    Eigen::Quaternionf q(msg->transform.rotation.w, msg->transform.rotation.x, msg->transform.rotation.y, msg->transform.rotation.z);
+    mat(0,3) = msg.transform.translation.x;
+    mat(1,3) = msg.transform.translation.y;
+    mat(2,3) = msg.transform.translation.z;
+    Eigen::Quaternionf q(msg.transform.rotation.w, msg.transform.rotation.x, msg.transform.rotation.y, msg.transform.rotation.z);
     mat.block<3,3>(0,0) = q.toRotationMatrix();
-    GlobalViewer::get().update_transform(title_, mat, msg->child_frame_id, msg->header.frame_id);
+    GlobalViewer::get().update_transform(title_, mat, msg.child_frame_id, msg.header.frame_id);
   }
 };
 
@@ -156,9 +153,9 @@ public:
   void reset() override { GlobalViewer::get().unregister_active_node(); }
   void initialize() override {}
 
-  void on_path(const fins::Msg<nav_msgs::msg::Path> &msg) {
+  void on_path(const nav_msgs::msg::Path &msg) {
     std::vector<Eigen::Vector3f> points;
-    for (const auto &p : msg->poses) {
+    for (const auto &p : msg.poses) {
       points.emplace_back(p.pose.position.x, p.pose.position.y, p.pose.position.z);
     }
     GlobalViewer::get().update_path(title_, points);
